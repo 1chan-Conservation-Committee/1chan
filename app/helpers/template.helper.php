@@ -9,7 +9,7 @@ class TemplateHelper
 	 */
 	public static function getSiteUrl()
 	{
-		return '1chan.ru';
+		return 'localhost:8888';
 	}
 
 	/**

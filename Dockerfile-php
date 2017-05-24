@@ -1,0 +1,7 @@
+FROM php:5-fpm
+RUN apt-get update &&\
+	apt-get install -y libpng-dev libjpeg-dev
+RUN pecl install redis &&\
+	docker-php-ext-enable redis &&\
+	docker-php-ext-install pdo pdo_mysql gd
+COPY ./1chan-fpm.conf /usr/local/etc/php-fpm.d/za-1chan.conf

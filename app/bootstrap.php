@@ -163,6 +163,7 @@ class Application
 		}
 		catch(Exception $e)
 		{
+			error_log(strval($e));
 			$this -> go('errors_error500');
 			return false;
 		}

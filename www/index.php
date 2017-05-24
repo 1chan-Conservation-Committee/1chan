@@ -2,12 +2,15 @@
 /**
  * Устанавливаем уровень ошибок:
  */
-error_reporting(0);
+error_reporting(E_ALL);
+ini_set('display_errors', 0);
 
 /**
  * Запускаем фреймворк:
  */
 require_once '../app/bootstrap.php';
+
+date_default_timezone_set('UTC');
 
 /**
  * Заглушка:

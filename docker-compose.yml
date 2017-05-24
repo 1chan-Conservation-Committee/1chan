@@ -1,0 +1,25 @@
+version: "3"
+services:
+  php:
+    build:
+      context: .
+      dockerfile: Dockerfile-php
+    volumes:
+      - .:/var/www/1chan
+  nginx:
+    image: "nginx:latest"
+    ports: ["8888:80"]
+    volumes:
+      - ./nginx-config:/etc/nginx/conf.d/
+      - .:/var/www/1chan
+  redis:
+    image: "redis:latest"
+  mysql:
+    image: "mysql:5"
+    environment:
+      MYSQL_ROOT_PASSWORD: sobak
+      MYSQL_DATABASE: 1chan
+      MYSQL_USER: sobak
+      MYSQL_PASSWORD: sobak
+    volumes:
+      - ./mysql-dump-dir:/docker-entrypoint-initdb.d
