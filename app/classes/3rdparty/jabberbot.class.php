@@ -14,6 +14,8 @@ class JabberBot
      */
     public static function send($message)
     {
+		// disabled
+		return;
     	$socket = socket_create(AF_UNIX, SOCK_STREAM, 0);
 		$con = socket_connect($socket, self::$socket);
 
