@@ -389,4 +389,5 @@ return array(
 		'jpeg_quality'     => 70,
 		'length'           => 4,
 	),
+	'discord_webhook_url' => 'https://discordapp.com/api/webhooks/...',
 );
