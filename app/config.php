@@ -2,10 +2,10 @@
 return array(
 	'database' => array(
 		'engine' => 'mysql',
-		'host'   => '127.0.0.1',
-		'name'   => '<DB_NAME>',
-		'user'   => '<DB_USER>',
-		'pass'   => '<DB_PASSWORD>'
+		'host'   => 'mysql',
+		'name'   => '1chan',
+		'user'   => 'sobak',
+		'pass'   => 'sobak'
 	),
 	'routes' => array(
 		'/admin' => array(
@@ -386,6 +386,7 @@ return array(
 		'credits'          => '',
 		'foreground_color' => array(mt_rand(0,100), mt_rand(0,100), mt_rand(0,100)),
 		'background_color' => array(255, 255, 255),
-		'jpeg_quality'     => 70
-	)
+		'jpeg_quality'     => 70,
+		'length'           => 4,
+	),
 );
