@@ -683,42 +683,52 @@ class BlogController extends BaseController
 				if (ControlModel::isPostHandApproving())
 					Blog_BlogPostsModel::RateablePost($id, false);
 
-				$discord_payload = array('embeds' => array(
-					array(
-						'title' => $_POST['title'],
-						'description' => $_POST['text'],
-						'url' => 'https://'. TemplateHelper::getSiteUrl() .'/news/res/'. $id .'/',
-					),
-				));
-
-				if ($_POST['homeboard'] && $_POST['homeboard'] != 'anonymous') {
-					$board = HomeBoardHelper::getBoard($_POST['homeboard']);
-					$discord_payload['embeds'][0]['footer'] = array(
-						'text' => 'Аноним выбрал принадлежность «' . $board[1] . '»',
-						'icon_url' => 'https://'. TemplateHelper::getSiteUrl() .'/ico/homeboards/' . $board[0],
-					);
-				}
-
-				if ($_POST['category'] != '') {
-					$category = Blog_BlogCategoryModel::GetCategoryByCode($_POST['category']);
-					$discord_payload['embeds'][0]['fields'] = array(array(
-						'name' => 'Категория',
-						'value' => $category['title'],
-						'inline' => TRUE,
-					));
-				}
-
 				$config = Config::getInstance();
-				$discord_url = $config['discord_webhook_url'];
-				$ch = curl_init($discord_url);
-				curl_setopt_array($ch, array(
-					CURLOPT_POSTFIELDS => json_encode($discord_payload),
-					CURLOPT_HTTPHEADER => array('Content-Type:application/json'),
-					CURLOPT_RETURNTRANSFER => true,
-				));
-				$curl_result = curl_exec($ch);
-				error_log($curl_result);
-				curl_close($ch);
+				if (isset($config['discord_webhook_url'])) {
+
+					$discord_payload = array('embeds' => array(
+						array(
+							'title' => $_POST['title'],
+							'description' => $_POST['text'],
+							'url' => 'https://'. TemplateHelper::getSiteUrl() .'/news/res/'. $id .'/',
+						),
+					));
+
+					if ($_POST['homeboard'] && $_POST['homeboard'] != 'anonymous') {
+						$board = HomeBoardHelper::getBoard($_POST['homeboard']);
+						$discord_payload['embeds'][0]['footer'] = array(
+							'text' => 'Аноним выбрал принадлежность «' . $board[1] . '»',
+							'icon_url' => 'https://'. TemplateHelper::getSiteUrl() .'/ico/homeboards/' . $board[0],
+						);
+					}
+
+					if ($_POST['category'] != '') {
+						$category = Blog_BlogCategoryModel::GetCategoryByCode($_POST['category']);
+						$discord_payload['embeds'][0]['fields'] = array(array(
+							'name' => 'Категория',
+							'value' => $category['title'],
+							'inline' => TRUE,
+						));
+					}
+
+					if(preg_match('/\[:([^:]+):\]/', $_POST['text'], $image_matches)) {
+						$discord_payload['embeds'][0]['thumbnail'] = array(
+							'url' => 'https://i.imgur.com/'.$image_matches[1].'.png',
+						);
+					}
+
+					$discord_url = $config['discord_webhook_url'];
+					$ch = curl_init($discord_url);
+					curl_setopt_array($ch, array(
+						CURLOPT_POSTFIELDS => json_encode($discord_payload),
+						CURLOPT_HTTPHEADER => array('Content-Type:application/json'),
+						CURLOPT_RETURNTRANSFER => true,
+					));
+					$curl_result = curl_exec($ch);
+					error_log($curl_result);
+					curl_close($ch);
+
+				}
 
 				$session -> persistenceSet('captcha_mode', false);
 				$session -> persistenceSet('captcha_mode_length', @$settings['captcha_length']);
